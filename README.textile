@@ -2,7 +2,7 @@ h1. Rails Indexes
 
 Rails indexes is a small package of 2 rake tasks that scan your application models and displays a list of columns that _probably_ should be indexed.
 
-note: there should be mode fields depending on your application design and custom queries.
+Note: there may be more fields depending on your application design and custom queries.
 
 h2. Installation
 
