@@ -160,6 +160,8 @@ module Indexer
   # Check line for find* methods (include find_all, find_by and just find)
   def self.check_line_for_find_indexes(file_name, line)
     
+    # TODO: Chokes on finders called on associations, e.g. current_user.widgets.find( params[:widget_id] )
+    
     # TODO: Assumes that you have a called on #find. you can actually call #find without a caller in a model code. ex:
     # def something
     #   find(self.id)
@@ -174,16 +176,20 @@ module Indexer
 
       model_name, column_names, options = matches[2], matches[7], matches[8]
       
-      # if the finder class is "self" or empty (can be a simple "find()" in a model)
-      if model_name == "self" || model_name.blank?
-        model_name = File.basename(file_name).sub(/\.rb$/,'').camelize
-        table_name = model_name.constantize.table_name            
-      else
-        if model_name.respond_to?(:constantize)
-          if model_name.constantize.respond_to?(:table_name)             
-            table_name = model_name.constantize.table_name
+      begin
+        # if the finder class is "self" or empty (can be a simple "find()" in a model)
+        if model_name == "self" || model_name.blank?
+          model_name = File.basename(file_name).sub(/\.rb$/,'').camelize
+          table_name = model_name.constantize.table_name            
+        else
+          if model_name.respond_to?(:constantize)
+            if model_name.constantize.respond_to?(:table_name)             
+              table_name = model_name.constantize.table_name
+            end
           end
         end
+      rescue
+        puts "ERROR: #{e} in #{line}"
       end
       
       # Check that all prerequisites are met
@@ -213,8 +219,12 @@ module Indexer
   end
   
   def self.key_exists?(table,key_columns)     
-    result = (key_columns.to_a - ActiveRecord::Base.connection.indexes(table).map { |i| i.columns }.flatten)
-    result.empty?
+    begin
+      result = (key_columns.to_a - ActiveRecord::Base.connection.indexes(table).map { |i| i.columns }.flatten)
+      result.empty?
+    rescue Exception => e
+      puts "ERROR: #{e} for table #{table}"
+    end
   end
   
   def self.simple_migration
