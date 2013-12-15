@@ -188,7 +188,7 @@ module Indexer
             end
           end
         end
-      rescue
+      rescue Exception => e
         puts "ERROR: #{e} in #{line}"
       end
       
