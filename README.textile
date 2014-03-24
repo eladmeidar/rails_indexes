@@ -1,3 +1,7 @@
+h1. DEPRECATED
+
+This gem doesn't really work on Rails 4 - no plans on upgrading it anyway. you probably should take a look at "lol_dba":https://github.com/plentz/lol_dba
+
 h1. Rails Indexes
 
 Rails indexes is a small package of 2 rake tasks that scan your application models and displays a list of columns that _probably_ should be indexed.
