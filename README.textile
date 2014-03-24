@@ -4,6 +4,10 @@ Rails indexes is a small package of 2 rake tasks that scan your application mode
 
 Note: there may be more fields depending on your application design and custom queries.
 
+h2. Rails 3.x and 4.x
+
+If you're using Rails 3.x or 4.x, you probably should take a look at "lol_dba":https://github.com/plentz/lol_dba
+
 h2. Installation
 
 as a rails plugin:
